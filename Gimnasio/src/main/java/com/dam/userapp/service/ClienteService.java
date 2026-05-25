@@ -19,6 +19,10 @@ public class ClienteService {
     public List<Cliente> getAllClientes() {
         return clienteRepository.findAll();
     }
+
+    public List<Cliente> findByEntrenadorId(Long entrenadorId){
+        return clienteRepository.findByEntrenador_Id(entrenadorId);
+    }
     
     public Optional<Cliente> getClienteById(Long id) {
         return clienteRepository.findById(id);

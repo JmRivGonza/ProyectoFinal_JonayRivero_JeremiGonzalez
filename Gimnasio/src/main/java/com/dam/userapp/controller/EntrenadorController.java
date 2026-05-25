@@ -10,36 +10,36 @@ import java.util.List;
 @RequestMapping("/api/v1/entrenadores")
 public class EntrenadorController {
 
-    private final EntrenadorService libroService;
-
-    public EntrenadorController(EntrenadorService libroService) {
-        this.libroService = libroService;
+    private final EntrenadorService entrenadorService;
+    public EntrenadorController(EntrenadorService entrenadorService) {
+        this.entrenadorService = entrenadorService;
     }
 
     // GET /users → lista todos los usuarios
     @GetMapping
-    public List<Entrenador> getAll() {
-        return libroService.findAll();
+    public ResponseEntity<List<Entrenador>> getAll() {
+        return ResponseEntity.ok(entrenadorService.findAll());    
     }
 
     // GET /users/{id} → obtiene un usuario por ID
     @GetMapping("/{id}")
     public ResponseEntity<Entrenador> getById(@PathVariable Long id) {
-        return libroService.findById(id)
+        return entrenadorService.findById(id)
             .map(ResponseEntity::ok)
             .orElse(ResponseEntity.notFound().build());
     }
 
     // POST /users → crea un nuevo usuario
     @PostMapping
-    public Entrenador create(@RequestBody Entrenador libro) {
-        return libroService.save(libro);
+    public ResponseEntity<Entrenador> create(@RequestBody Entrenador entrenador) {
+        Entrenador nuevo = entrenadorService.save(entrenador);
+        return ResponseEntity.ok(nuevo);    
     }
 
     // PUT /users/{id} → actualiza un usuario existente
     @PutMapping("/{id}")
     public ResponseEntity<Entrenador> update(@PathVariable Long id, @RequestBody Entrenador datos) {
-        return libroService.update(id, datos)
+        return entrenadorService.update(id, datos)
             .map(ResponseEntity::ok)
             .orElse(ResponseEntity.notFound().build());
     }
@@ -47,7 +47,7 @@ public class EntrenadorController {
     // DELETE /users/{id} → elimina un usuario
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        libroService.delete(id);
+        entrenadorService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

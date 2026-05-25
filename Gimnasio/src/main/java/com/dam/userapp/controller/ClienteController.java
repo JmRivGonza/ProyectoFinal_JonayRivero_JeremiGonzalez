@@ -33,6 +33,7 @@ public class ClienteController {
     public Cliente createCliente(@RequestBody Cliente cliente) {
         return clienteService.createCliente(cliente);
     }
+
     
     @PutMapping("/{id}")
     public ResponseEntity<Cliente> updateCliente(@PathVariable Long id, @RequestBody Cliente cliente) {
@@ -46,5 +47,10 @@ public class ClienteController {
         clienteService.deleteCliente(id);
         return ResponseEntity.ok().build();
     }
-    
+
+    @GetMapping("/entrenador/{entrenadorId}")
+    public ResponseEntity<List<Cliente>> findByEntrenadorId(@PathVariable Long entrenadorId){
+        List<Cliente> clientes = clienteService.findByEntrenadorId(entrenadorId);
+        return ResponseEntity.ok(clientes);
+    }
 }
