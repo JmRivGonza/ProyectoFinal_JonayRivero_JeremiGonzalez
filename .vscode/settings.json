@@ -1,4 +1,7 @@
 {
-    "java.configuration.updateBuildConfiguration": "interactive",
+<<<<<<< HEAD
+    "java.configuration.updateBuildConfiguration": "interactive"
+=======
     "java.compile.nullAnalysis.mode": "automatic"
+>>>>>>> origin/main
 }
