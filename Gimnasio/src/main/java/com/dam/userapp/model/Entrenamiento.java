@@ -21,5 +21,13 @@ public class Entrenamiento {
     private String dificultad; // Principiante, Intermedio, Avanzado
     private String duracion; // Ejemplo: 30 minutos, 1 hora, 2 horas, etc.
     private String horario;  // Miercoles a las 19:00
+    private boolean entrenamiento;
 
+    @ManyToOne
+    @JoinColumn(name = "cliente_id")
+    private Cliente cliente;
+    
+    @ManyToOne
+    @JoinColumn(name = "entrenador_id")
+    private Entrenador entrenador;
 }
