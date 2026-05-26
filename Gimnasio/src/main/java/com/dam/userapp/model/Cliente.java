@@ -1,5 +1,7 @@
 package com.dam.userapp.model;
 
+import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,4 +26,8 @@ public class Cliente {
     @ManyToOne(fetch = FetchType.EAGER) // Le indica a JPA que esta clase tiene una relación con la clase Entrenador.
     @JoinColumn(name = "entrenador_id", nullable = false) // Esto crea la FK en la tabla de MySQL
     private Entrenador entrenador;
+
+    @ManyToMany(mappedBy = "clientes")
+    @JsonIgnoreProperties("clientes") // evita que al pintar la clase vuelv a pintar el cliente
+    private List<Clase> clases;
 }
