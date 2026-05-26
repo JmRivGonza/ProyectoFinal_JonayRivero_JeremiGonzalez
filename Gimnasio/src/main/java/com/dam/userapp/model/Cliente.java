@@ -28,6 +28,6 @@ public class Cliente {
     private Entrenador entrenador;
 
     @ManyToMany(mappedBy = "clientes")
-    @jsonIgnoreProperties("clientes") // evita que al pintar la clase vuelv a pintar el cliente
+    @JsonIgnoreProperties("clientes") // evita que al pintar la clase vuelv a pintar el cliente
     private List<Clase> clases;
 }
