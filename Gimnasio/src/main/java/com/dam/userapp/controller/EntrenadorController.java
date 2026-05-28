@@ -32,14 +32,14 @@ public class EntrenadorController {
 
     // POST /users → crea un nuevo usuario
     @PostMapping
-    public ResponseEntity<Entrenador> create(@RequestBody Entrenador entrenador) {
+    public ResponseEntity<Entrenador> create(@Valid @RequestBody Entrenador entrenador) {
         Entrenador nuevo = entrenadorService.save(entrenador);
         return ResponseEntity.ok(nuevo);    
     }
 
     // PUT /users/{id} → actualiza un usuario existente
     @PutMapping("/{id}")
-    public ResponseEntity<Entrenador> update(@PathVariable Long id, @RequestBody Entrenador datos) {
+    public ResponseEntity<Entrenador> update(@PathVariable Long id, @Valid @RequestBody Entrenador datos) {
         return entrenadorService.update(id, datos)
             .map(ResponseEntity::ok)
             .orElse(ResponseEntity.notFound().build());
