@@ -4,6 +4,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -20,7 +21,9 @@ public class Entrenador {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Genera un valor único para el id automáticamente.
     private Long id;
+    @NotBlank (message = "El nombre es obligatorio")
     private String nombre;
+    @NotBlank (message = "La especialidad es obligatoria")
     private String especialidad; // Ej: Crossfit, Natacion, Running, Pilates, Yoga
 
     @OneToMany(mappedBy = "entrenador",cascade = CascadeType.ALL)

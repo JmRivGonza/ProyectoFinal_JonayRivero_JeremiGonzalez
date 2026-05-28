@@ -2,6 +2,8 @@ package com.dam.userapp.controller;
 
 import com.dam.userapp.model.Cliente;
 import com.dam.userapp.service.ClienteService;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +20,8 @@ public class ClienteController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Cliente>> getAllClientes(@RequestParam(required = false, defaultValue = "") String nombre) {
+    public ResponseEntity<List<Cliente>> getAllClientes(
+            @RequestParam(required = false, defaultValue = "") String nombre) {
         if (nombre != null && !nombre.trim().isEmpty()) {
             List<Cliente> resultados = clienteService.buscarPorNombre(nombre);
             return ResponseEntity.ok(resultados);
@@ -26,9 +29,17 @@ public class ClienteController {
         return ResponseEntity.ok(clienteService.getAllClientes());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Cliente> getClienteById(@PathVariable Long id) {
+        return clienteService.getClienteById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
     @PostMapping
-    public Cliente createCliente(@RequestBody Cliente cliente) {
-        return clienteService.createCliente(cliente);
+    public ResponseEntity<Cliente> createCliente(@RequestBody Cliente cliente) {
+        Cliente nuevo = clienteService.createCliente(cliente);
+        return ResponseEntity.status(HttpStatus.CREATED).body(nuevo);
     }
 
     @PutMapping("/{id}")

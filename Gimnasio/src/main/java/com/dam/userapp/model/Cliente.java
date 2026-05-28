@@ -3,6 +3,8 @@ package com.dam.userapp.model;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Entity // Le indica a JPA que esta clase es una entidad, osea que se guardara en una
@@ -16,11 +18,15 @@ public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Genera un valor único para el id automáticamente.
     private Long id;
+    @NotBlank (message = "El nombre es obligatorio")
     private String nombre;
     private String nacionalidad;
+    @NotBlank (message = "La fecha de nacimiento es obligatoria")
     private String nacimiento;
     private String objetivo;
+    @NotBlank (message = "El email es obligatorio")
     private String email;
+    @NotNull (message = "El estado es obligatorio")
     private boolean activo;
 
     @ManyToOne(fetch = FetchType.EAGER) // Le indica a JPA que esta clase tiene una relación con la clase Entrenador.

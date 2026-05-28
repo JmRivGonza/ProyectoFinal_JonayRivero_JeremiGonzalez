@@ -18,6 +18,8 @@ public class ClaseController {
         this.claseService = claseService;
     }
 
+ 
+
     @GetMapping
     public ResponseEntity<List<Clase>> getAllClases() {
         return ResponseEntity.ok(claseService.getAllClases());
