@@ -2,6 +2,7 @@ package com.dam.userapp.controller;
 
 import com.dam.userapp.model.Entrenador;
 import com.dam.userapp.service.EntrenadorService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;

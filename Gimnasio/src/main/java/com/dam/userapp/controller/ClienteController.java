@@ -1,5 +1,6 @@
 package com.dam.userapp.controller;
 
+import jakarta.validation.Valid;
 import com.dam.userapp.model.Cliente;
 import com.dam.userapp.service.ClienteService;
 
@@ -43,7 +44,7 @@ public class ClienteController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Cliente> updateCliente(@PathVariable Long id, @RequestBody Cliente cliente) {
+    public ResponseEntity<Cliente> updateCliente(@PathVariable Long id, @Valid @RequestBody Cliente cliente) {
         return clienteService.updateCliente(id, cliente)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
