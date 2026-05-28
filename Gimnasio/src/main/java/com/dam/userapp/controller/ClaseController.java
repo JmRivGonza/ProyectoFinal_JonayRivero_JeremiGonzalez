@@ -18,11 +18,18 @@ public class ClaseController {
         this.claseService = claseService;
     }
 
- 
-
     @GetMapping
     public ResponseEntity<List<Clase>> getAllClases() {
         return ResponseEntity.ok(claseService.getAllClases());
+    }
+
+    @PostMapping("/{claseId}/clientes/{clienteId}")
+    public ResponseEntity<Clase> añadirCliente(
+            @PathVariable Long claseId,
+            @PathVariable Long clienteId) {
+        return claseService.addCliente(claseId, clienteId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
@@ -35,5 +42,15 @@ public class ClaseController {
     public ResponseEntity<Long> getAforo(@PathVariable Long id) {
         Long aforo = claseService.obtenerAforoActual(id);
         return ResponseEntity.ok(aforo);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteClase(@PathVariable Long id) {
+        return claseService.getClaseById(id)
+                .map(c -> {
+                    claseService.deleteClase(id);
+                    return ResponseEntity.noContent().<Void>build();
+                })
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GymApp — Panel de gestión</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <img class="img" src="img/logo-gym.webp" alt="Logo Gym">
+        <h1>GymApp</h1>
+        <span>Panel de gestión</span>
+    </header>
+
+    <nav>
+        <button class="active" onclick="switchTab('entrenadores', this)">Entrenadores</button>
+        <button onclick="switchTab('clientes', this)">Clientes</button>
+        <button onclick="switchTab('clases', this)">Clases</button>
+    </nav>
+
+    <main>
+
+        <!-- ENTRENADORES -->
+        <div class="section active" id="tab-entrenadores">
+            <div class="section-header">
+                <div>
+                    <h2>Entrenadores</h2>
+                    <p id="count-entrenadores">Cargando...</p>
+                </div>
+                <button class="btn" onclick="openModal('entrenador', null)">+ Añadir entrenador</button>
+            </div>
+            <div class="cards" id="cards-entrenadores">
+                <div class="loading">Cargando...</div>
+            </div>
+        </div>
+
+        <!-- CLIENTES -->
+        <div class="section" id="tab-clientes">
+            <div class="section-header">
+                <div>
+                    <h2>Clientes</h2>
+                    <p id="count-clientes">Cargando...</p>
+                </div>
+                <button class="btn" onclick="openModal('cliente', null)">+ Añadir cliente</button>
+            </div>
+            <div class="stats" id="stats-clientes" style="display:none">
+                <div class="stat">
+                    <div class="stat-num" id="stat-total">0</div>
+                    <div class="stat-label">Total clientes</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num" id="stat-activos">0</div>
+                    <div class="stat-label">Activos</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num" id="stat-inactivos">0</div>
+                    <div class="stat-label">Inactivos</div>
+                </div>
+            </div>
+            <div class="cards" id="cards-clientes">
+                <div class="loading">Cargando...</div>
+            </div>
+        </div>
+
+        <!-- CLASES -->
+        <div class="section" id="tab-clases">
+            <div class="section-header">
+                <div>
+                    <h2>Clases</h2>
+                    <p id="count-clases">Cargando...</p>
+                </div>
+                <button class="btn" onclick="openModal('clase', null)">+ Añadir clase</button>
+            </div>
+            <div class="cards" id="cards-clases">
+                <div class="loading">Cargando...</div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- MODAL ENTRENADOR -->
+    <div class="overlay" id="modal-entrenador">
+        <div class="modal">
+            <h3 id="modal-entrenador-title">Nuevo entrenador</h3>
+            <input type="hidden" id="ent-id">
+            <div class="form-group">
+                <label>Nombre</label>
+                <input type="text" id="ent-nombre" placeholder="Ej: Carlos López">
+                <div class="field-error" id="err-ent-nombre">El nombre no puede estar vacío</div>
+            </div>
+            <div class="form-group">
+                <label>Especialidad</label>
+                <input type="text" id="ent-especialidad" placeholder="Ej: Crossfit, Yoga, Natación">
+                <div class="field-error" id="err-ent-especialidad">La especialidad no puede estar vacía</div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-ghost" onclick="closeModal('entrenador')">Cancelar</button>
+                <button class="btn" onclick="guardarEntrenador()">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CLIENTE -->
+    <div class="overlay" id="modal-cliente">
+        <div class="modal">
+            <h3 id="modal-cliente-title">Nuevo cliente</h3>
+            <input type="hidden" id="cli-id">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Nombre</label>
+                    <input type="text" id="cli-nombre" placeholder="Nombre completo">
+                    <div class="field-error" id="err-cli-nombre">Campo obligatorio</div>
+                </div>
+                <div class="form-group">
+                    <label>Nacionalidad</label>
+                    <input type="text" id="cli-nacionalidad" placeholder="Ej: Española">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Fecha nacimiento</label>
+                    <input type="text" id="cli-nacimiento" placeholder="Ej: 1995-03-12">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="cli-email" placeholder="correo@ejemplo.com">
+                    <div class="field-error" id="err-cli-email">Email no válido</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Objetivo</label>
+                <input type="text" id="cli-objetivo" placeholder="Ej: Perder peso, ganar músculo">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Entrenador</label>
+                    <select id="cli-entrenador">
+                        <option value="">Seleccionar...</option>
+                    </select>
+                    <div class="field-error" id="err-cli-entrenador">Selecciona un entrenador</div>
+                </div>
+                <div class="form-group">
+                    <label>Estado</label>
+                    <select id="cli-activo">
+                        <option value="true">Activo</option>
+                        <option value="false">Inactivo</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-ghost" onclick="closeModal('cliente')">Cancelar</button>
+                <button class="btn" onclick="guardarCliente()">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CLASE -->
+    <div class="overlay" id="modal-clase">
+        <div class="modal">
+            <h3 id="modal-clase-title">Nueva clase</h3>
+            <input type="hidden" id="cla-id">
+            <div class="form-group">
+                <label>Nombre</label>
+                <input type="text" id="cla-nombre" placeholder="Ej: Spinning, Pilates">
+                <div class="field-error" id="err-cla-nombre">El nombre no puede estar vacío</div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Día</label>
+                    <select id="cla-dia">
+                        <option value="">Seleccionar día...</option>
+                        <option>Lunes</option>
+                        <option>Martes</option>
+                        <option>Miércoles</option>
+                        <option>Jueves</option>
+                        <option>Viernes</option>
+                        <option>Sábado</option>
+                        <option>Domingo</option>
+                    </select>
+                    <div class="field-error" id="err-cla-dia">Selecciona un día</div>
+                </div>
+                <div class="form-group">
+                    <label>Hora</label>
+                    <input type="time" id="cla-hora" min="07:00" max="22:00">
+                    <div class="field-error" id="err-cla-hora">Hora entre 07:00 y 22:00</div>
+                    <div class="time-hint">Horario permitido: 07:00 – 22:00</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Sala (número entre 1 y 20)</label>
+                <input type="number" id="cla-sala" placeholder="Nº sala" min="1" max="20">
+                <div class="field-error" id="err-cla-sala">La sala debe ser un número entre 1 y 20</div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-ghost" onclick="closeModal('clase')">Cancelar</button>
+                <button class="btn" onclick="guardarClase()">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL AÑADIR CLIENTE A CLASE -->
+    <div class="overlay" id="modal-clase-cliente">
+        <div class="modal">
+            <h3 id="modal-clase-cliente-title">Añadir cliente a clase</h3>
+            <div class="form-group">
+                <label>Selecciona un cliente</label>
+                <select id="select-cliente-clase">
+                    <option value="">Cargando clientes...</option>
+                </select>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-ghost" onclick="closeModal('clase-cliente')">Cancelar</button>
+                <button class="btn" onclick="confirmarAñadirCliente()">Añadir</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONFIRM DELETE -->
+    <div class="confirm-overlay" id="confirm-overlay">
+        <div class="confirm-box">
+            <h4>¿Eliminar registro?</h4>
+            <p id="confirm-msg">Esta acción no se puede deshacer.</p>
+            <div class="confirm-actions">
+                <button class="btn-ghost" onclick="closeConfirm()">Cancelar</button>
+                <button class="btn" style="background:var(--danger)" id="confirm-ok">Eliminar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const API = 'http://localhost:8080/api/v1';
+        const AUTH = 'Basic ' + btoa('admin:admin123');
+        let entrenadores = [];
+        let confirmCallback = null;
+
+        // ── Utils ─────────────────────────────────────────────
+
+        function switchTab(tab, btn) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+            document.getElementById('tab-' + tab).classList.add('active');
+            btn.classList.add('active');
+            if (tab === 'entrenadores') loadEntrenadores();
+            if (tab === 'clientes') loadClientes();
+            if (tab === 'clases') loadClases();
+        }
+
+        function openModal(type, data) {
+            clearErrors(type);
+            if (type === 'entrenador') fillEntrenadorModal(data);
+            if (type === 'cliente') { cargarEntrenadoresEnSelect(data); fillClienteModal(data); }
+            if (type === 'clase') fillClaseModal(data);
+            document.getElementById('modal-' + type).classList.add('open');
+        }
+
+        function closeModal(type) {
+            document.getElementById('modal-' + type).classList.remove('open');
+        }
+
+        function showToast(msg, type = 'success') {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = 'toast show ' + type;
+            setTimeout(() => t.className = 'toast', 2500);
+        }
+
+        function initials(nombre) {
+            return nombre ? nombre.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase() : '?';
+        }
+
+        function showError(id, show = true) {
+            const el = document.getElementById('err-' + id);
+            const input = document.getElementById(id.replace('err-', '').replace(/-/g, '-'));
+            if (el) el.classList.toggle('show', show);
+        }
+
+        function clearErrors(type) {
+            document.querySelectorAll('#modal-' + type + ' .field-error').forEach(e => e.classList.remove('show'));
+            document.querySelectorAll('#modal-' + type + ' input, #modal-' + type + ' select').forEach(e => e.classList.remove('error'));
+        }
+
+        function markError(fieldId, msg) {
+            const errEl = document.getElementById('err-' + fieldId);
+            const inputEl = document.getElementById(fieldId);
+            if (errEl) { if (msg) errEl.textContent = msg; errEl.classList.add('show'); }
+            if (inputEl) inputEl.classList.add('error');
+        }
+
+        function openConfirm(msg, cb) {
+            document.getElementById('confirm-msg').textContent = msg;
+            confirmCallback = cb;
+            document.getElementById('confirm-overlay').classList.add('open');
+        }
+
+        function closeConfirm() {
+            document.getElementById('confirm-overlay').classList.remove('open');
+            confirmCallback = null;
+        }
+
+        document.getElementById('confirm-ok').onclick = () => {
+            if (confirmCallback) confirmCallback();
+            closeConfirm();
+        };
+
+        document.querySelectorAll('.overlay, .confirm-overlay').forEach(o => {
+            o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); });
+        });
+
+        // ── Validaciones ──────────────────────────────────────
+
+        function validarHora(hora) {
+            if (!hora) return false;
+            const [h, m] = hora.split(':').map(Number);
+            return h >= 7 && (h < 22 || (h === 22 && m === 0));
+        }
+
+        function validarSala(sala) {
+            const n = parseInt(sala);
+            return !isNaN(n) && n >= 1 && n <= 20;
+        }
+
+        function validarEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        // ── ENTRENADORES ──────────────────────────────────────
+
+        function fillEntrenadorModal(data) {
+            document.getElementById('modal-entrenador-title').textContent = data ? 'Editar entrenador' : 'Nuevo entrenador';
+            document.getElementById('ent-id').value = data ? data.id : '';
+            document.getElementById('ent-nombre').value = data ? data.nombre : '';
+            document.getElementById('ent-especialidad').value = data ? data.especialidad : '';
+        }
+
+        let claseSeleccionadaId = null;
+
+        async function abrirModalClientes(claseId, claseNombre) {
+            claseSeleccionadaId = claseId;
+            document.getElementById('modal-clase-cliente-title').textContent = 'Añadir cliente a ' + claseNombre;
+            try {
+                const res = await fetch(API + '/clientes');
+                const clientes = await res.json();
+                const select = document.getElementById('select-cliente-clase');
+                if (clientes.length === 0) {
+                    select.innerHTML = '<option value="">No hay clientes registrados</option>';
+                } else {
+                    select.innerHTML = '<option value="">Seleccionar cliente...</option>' +
+                        clientes.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
+                }
+            } catch {
+                showToast('Error al cargar clientes', 'error');
+                return;
+            }
+            document.getElementById('modal-clase-cliente').classList.add('open');
+        }
+
+        async function confirmarAñadirCliente() {
+            const clienteId = document.getElementById('select-cliente-clase').value;
+            if (!clienteId) { showToast('Selecciona un cliente', 'error'); return; }
+            try {
+                const res = await fetch(`${API}/clases/${claseSeleccionadaId}/clientes/${clienteId}`, {
+                    method: 'POST',
+                    headers: { 'Authorization': AUTH }
+                });
+                if (res.ok) {
+                    closeModal('clase-cliente');
+                    showToast('Cliente añadido a la clase');
+                    loadClases();
+                } else {
+                    showToast('Error al añadir cliente', 'error');
+                }
+            } catch { showToast('Error de conexión', 'error'); }
+        }
+
+        async function loadEntrenadores() {
+            try {
+                const res = await fetch(API + '/entrenadores');
+                entrenadores = await res.json();
+                const container = document.getElementById('cards-entrenadores');
+                document.getElementById('count-entrenadores').textContent = entrenadores.length + ' entrenadores registrados';
+                if (entrenadores.length === 0) { container.innerHTML = '<div class="empty">No hay entrenadores aún.</div>'; return; }
+                container.innerHTML = entrenadores.map(e => `
+      <div class="card">
+        <div class="card-top">
+          <div class="avatar avatar-blue">${initials(e.nombre)}</div>
+          <div><div class="card-name">${e.nombre}</div><div class="card-sub">Entrenador #${e.id}</div></div>
+        </div>
+        <div class="card-fields">
+          <div class="field"><span class="field-label">Especialidad</span><span class="badge badge-blue">${e.especialidad || '—'}</span></div>
+        </div>
+        <div class="card-actions">
+          <button class="btn-edit" onclick='openModal("entrenador", ${JSON.stringify(e)})'>Editar</button>
+          <button class="btn-danger" onclick="confirmarBorrar('entrenador', ${e.id}, '${e.nombre}')">Eliminar</button>
+        </div>
+      </div>`).join('');
+            } catch { document.getElementById('cards-entrenadores').innerHTML = '<div class="empty">Error al conectar con la API.</div>'; }
+        }
+
+        async function guardarEntrenador() {
+            clearErrors('entrenador');
+            const nombre = document.getElementById('ent-nombre').value.trim();
+            const especialidad = document.getElementById('ent-especialidad').value.trim();
+            let ok = true;
+            if (!nombre) { markError('ent-nombre'); ok = false; }
+            if (!especialidad) { markError('ent-especialidad'); ok = false; }
+            if (!ok) return;
+
+            const id = document.getElementById('ent-id').value;
+            const method = id ? 'PUT' : 'POST';
+            const url = id ? `${API}/entrenadores/${id}` : `${API}/entrenadores`;
+
+            try {
+                const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json', 'Authorization': AUTH }, body: JSON.stringify({ nombre, especialidad }) });
+                if (res.ok || res.status === 201) {
+                    closeModal('entrenador');
+                    showToast(id ? 'Entrenador actualizado' : 'Entrenador creado');
+                    loadEntrenadores();
+                } else { showToast('Error al guardar', 'error'); }
+            } catch { showToast('Error de conexión', 'error'); }
+        }
+
+        // ── CLIENTES ──────────────────────────────────────────
+
+        function fillClienteModal(data) {
+            document.getElementById('modal-cliente-title').textContent = data ? 'Editar cliente' : 'Nuevo cliente';
+            document.getElementById('cli-id').value = data ? data.id : '';
+            document.getElementById('cli-nombre').value = data ? data.nombre : '';
+            document.getElementById('cli-nacionalidad').value = data ? data.nacionalidad : '';
+            document.getElementById('cli-nacimiento').value = data ? data.nacimiento : '';
+            document.getElementById('cli-email').value = data ? data.email : '';
+            document.getElementById('cli-objetivo').value = data ? data.objetivo : '';
+            document.getElementById('cli-activo').value = data ? String(data.activo) : 'true';
+            if (data && data.entrenador) setTimeout(() => document.getElementById('cli-entrenador').value = data.entrenador.id, 50);
+        }
+
+        async function loadClientes() {
+            try {
+                const res = await fetch(API + '/clientes');
+                const clientes = await res.json();
+                const container = document.getElementById('cards-clientes');
+                const statsBox = document.getElementById('stats-clientes');
+                const activos = clientes.filter(c => c.activo).length;
+                document.getElementById('count-clientes').textContent = clientes.length + ' clientes registrados';
+                document.getElementById('stat-total').textContent = clientes.length;
+                document.getElementById('stat-activos').textContent = activos;
+                document.getElementById('stat-inactivos').textContent = clientes.length - activos;
+                statsBox.style.display = clientes.length > 0 ? 'grid' : 'none';
+                if (clientes.length === 0) { container.innerHTML = '<div class="empty">No hay clientes aún.</div>'; return; }
+                container.innerHTML = clientes.map(c => `
+      <div class="card">
+        <div class="card-top">
+          <div class="avatar avatar-green">${initials(c.nombre)}</div>
+          <div><div class="card-name">${c.nombre}</div><div class="card-sub">${c.email || 'Sin email'}</div></div>
+        </div>
+        <div class="card-fields">
+          <div class="field"><span class="field-label">Objetivo</span><span class="field-value">${c.objetivo || '—'}</span></div>
+          <div class="field"><span class="field-label">Nacionalidad</span><span class="field-value">${c.nacionalidad || '—'}</span></div>
+          <div class="field"><span class="field-label">Entrenador</span><span class="field-value">${c.entrenador ? c.entrenador.nombre : '—'}</span></div>
+          <div class="field"><span class="field-label">Estado</span><span class="badge ${c.activo ? 'badge-green' : 'badge-red'}">${c.activo ? 'Activo' : 'Inactivo'}</span></div>
+        </div>
+        <div class="card-actions">
+          <button class="btn-edit" onclick='openModal("cliente", ${JSON.stringify(c).replace(/'/g, "&#39;")})'>Editar</button>
+          <button class="btn-danger" onclick="confirmarBorrar('cliente', ${c.id}, '${c.nombre}')">Eliminar</button>
+        </div>
+      </div>`).join('');
+            } catch { document.getElementById('cards-clientes').innerHTML = '<div class="empty">Error al conectar con la API.</div>'; }
+        }
+
+        async function cargarEntrenadoresEnSelect(data) {
+            try {
+                if (entrenadores.length === 0) { const r = await fetch(API + '/entrenadores'); entrenadores = await r.json(); }
+                const select = document.getElementById('cli-entrenador');
+                select.innerHTML = '<option value="">Seleccionar...</option>' + entrenadores.map(e => `<option value="${e.id}">${e.nombre}</option>`).join('');
+                if (data && data.entrenador) select.value = data.entrenador.id;
+            } catch { }
+        }
+
+        async function guardarCliente() {
+            clearErrors('cliente');
+            const nombre = document.getElementById('cli-nombre').value.trim();
+            const email = document.getElementById('cli-email').value.trim();
+            const entrenadorId = document.getElementById('cli-entrenador').value;
+            let ok = true;
+            if (!nombre) { markError('cli-nombre'); ok = false; }
+            if (!validarEmail(email)) { markError('cli-email', 'Introduce un email válido'); ok = false; }
+            if (!entrenadorId) { markError('cli-entrenador'); ok = false; }
+            if (!ok) return;
+
+            const id = document.getElementById('cli-id').value;
+            const method = id ? 'PUT' : 'POST';
+            const url = id ? `${API}/clientes/${id}` : `${API}/clientes`;
+            const body = {
+                nombre, email,
+                nacionalidad: document.getElementById('cli-nacionalidad').value.trim(),
+                nacimiento: document.getElementById('cli-nacimiento').value.trim(),
+                objetivo: document.getElementById('cli-objetivo').value.trim(),
+                activo: document.getElementById('cli-activo').value === 'true',
+                entrenador: { id: entrenadorId }
+            };
+
+            try {
+                const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json', 'Authorization': AUTH }, body: JSON.stringify(body) });
+                if (res.ok || res.status === 201) {
+                    closeModal('cliente');
+                    showToast(id ? 'Cliente actualizado' : 'Cliente creado');
+                    loadClientes();
+                } else { showToast('Error al guardar', 'error'); }
+            } catch { showToast('Error de conexión', 'error'); }
+        }
+
+        // ── CLASES ────────────────────────────────────────────
+
+        function fillClaseModal(data) {
+            document.getElementById('modal-clase-title').textContent = data ? 'Editar clase' : 'Nueva clase';
+            document.getElementById('cla-id').value = data ? data.id : '';
+            document.getElementById('cla-nombre').value = data ? data.nombre : '';
+            document.getElementById('cla-sala').value = data ? data.sala : '';
+
+            if (data && data.horario) {
+                const parts = data.horario.split(' ');
+                document.getElementById('cla-dia').value = parts[0] || '';
+                document.getElementById('cla-hora').value = parts[1] || '';
+            } else {
+                document.getElementById('cla-dia').value = '';
+                document.getElementById('cla-hora').value = '';
+            }
+        }
+
+        async function loadClases() {
+            try {
+                const res = await fetch(API + '/clases');
+                const clases = await res.json();
+                const container = document.getElementById('cards-clases');
+                document.getElementById('count-clases').textContent = clases.length + ' clases registradas';
+                if (clases.length === 0) { container.innerHTML = '<div class="empty">No hay clases aún.</div>'; return; }
+                const aforos = await Promise.all(clases.map(c => fetch(API + '/clases/' + c.id + '/aforo').then(r => r.json()).catch(() => 0)));
+                container.innerHTML = clases.map((c, i) => `
+      <div class="card">
+        <div class="card-top">
+          <div class="avatar avatar-purple">${initials(c.nombre)}</div>
+          <div><div class="card-name">${c.nombre}</div><div class="card-sub">Sala ${c.sala || '—'}</div></div>
+        </div>
+        <div class="card-fields">
+          <div class="field"><span class="field-label">Horario</span><span class="field-value">${c.horario || '—'}</span></div>
+          <div class="field"><span class="field-label">Inscritos</span><span class="badge badge-blue">${aforos[i]} cliente${aforos[i] !== 1 ? 's' : ''}</span></div>
+        <div class="card-actions">
+  <button class="btn-edit" onclick='openModal("clase", ${JSON.stringify(c)})'>Editar</button>
+  <button class="btn-edit" onclick='abrirModalClientes(${c.id}, "${c.nombre}")'>+ Cliente</button>
+  <button class="btn-danger" onclick="confirmarBorrar('clase', ${c.id}, '${c.nombre}')">Eliminar</button>
+</div>
+      </div>`).join('');
+            } catch { document.getElementById('cards-clases').innerHTML = '<div class="empty">Error al conectar con la API.</div>'; }
+        }
+
+        async function guardarClase() {
+            clearErrors('clase');
+            const nombre = document.getElementById('cla-nombre').value.trim();
+            const dia = document.getElementById('cla-dia').value;
+            const hora = document.getElementById('cla-hora').value;
+            const sala = document.getElementById('cla-sala').value;
+            let ok = true;
+
+            if (!nombre) { markError('cla-nombre'); ok = false; }
+            if (!dia) { markError('cla-dia', 'Selecciona un día'); ok = false; }
+            if (!hora || !validarHora(hora)) { markError('cla-hora', 'Hora entre 07:00 y 22:00'); ok = false; }
+            if (sala !== '' && !validarSala(sala)) { markError('cla-sala', 'La sala debe ser un número entre 1 y 20'); ok = false; }
+            if (!ok) return;
+
+            const horario = `${dia} ${hora}`;
+            const id = document.getElementById('cla-id').value;
+            const method = id ? 'PUT' : 'POST';
+            const url = id ? `${API}/clases/${id}` : `${API}/clases`;
+
+            try {
+                const res = await fetch(url, {
+                    method, headers: { 'Content-Type': 'application/json', 'Authorization': AUTH },
+                    body: JSON.stringify({ nombre, horario, sala: sala ? parseInt(sala) : null })
+                });
+                if (res.ok || res.status === 201) {
+                    closeModal('clase');
+                    showToast(id ? 'Clase actualizada' : 'Clase creada');
+                    loadClases();
+                } else { showToast('Error al guardar', 'error'); }
+            } catch { showToast('Error de conexión', 'error'); }
+        }
+
+        // ── BORRAR ────────────────────────────────────────────
+
+        function confirmarBorrar(tipo, id, nombre) {
+            const nombres = { entrenador: 'entrenador', cliente: 'cliente', clase: 'clase' };
+            openConfirm(`¿Seguro que quieres eliminar el ${nombres[tipo]} "${nombre}"? Esta acción no se puede deshacer.`, async () => {
+                try {
+                    const rutas = { entrenador: 'entrenadores', cliente: 'clientes', clase: 'clases' };
+                    const res = await fetch(`${API}/${rutas[tipo]}/${id}`, { method: 'DELETE', headers: { 'Authorization': AUTH } }); if (res.status === 204 || res.ok) {
+                        showToast(`${nombres[tipo].charAt(0).toUpperCase() + nombres[tipo].slice(1)} eliminado`);
+                        if (tipo === 'entrenador') loadEntrenadores();
+                        if (tipo === 'cliente') loadClientes();
+                        if (tipo === 'clase') loadClases();
+                    } else { showToast('Error al eliminar', 'error'); }
+                } catch { showToast('Error de conexión', 'error'); }
+            });
+        }
+
+        loadEntrenadores();
+    </script>
+</body>
+
+</html>
