@@ -2,6 +2,7 @@ package com.dam.userapp.controller;
 
 import com.dam.userapp.model.Entrenador;
 import com.dam.userapp.service.EntrenadorService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -32,13 +33,13 @@ public class EntrenadorController {
 
     // POST /users → crea un nuevo usuario
     @PostMapping
-    public Entrenador create(@RequestBody Entrenador libro) {
+    public Entrenador create(@Valid @RequestBody Entrenador libro) {
         return libroService.save(libro);
     }
 
     // PUT /users/{id} → actualiza un usuario existente
     @PutMapping("/{id}")
-    public ResponseEntity<Entrenador> update(@PathVariable Long id, @RequestBody Entrenador datos) {
+    public ResponseEntity<Entrenador> update(@PathVariable Long id, @Valid @RequestBody Entrenador datos) {
         return libroService.update(id, datos)
             .map(ResponseEntity::ok)
             .orElse(ResponseEntity.notFound().build());

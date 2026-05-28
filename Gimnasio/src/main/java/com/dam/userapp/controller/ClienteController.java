@@ -1,5 +1,6 @@
 package com.dam.userapp.controller;
 
+import jakarta.validation.Valid;
 import com.dam.userapp.model.Cliente;
 import com.dam.userapp.service.ClienteService;
 import org.springframework.http.ResponseEntity;
@@ -30,12 +31,12 @@ public class ClienteController {
     }
     
     @PostMapping
-    public Cliente createCliente(@RequestBody Cliente cliente) {
+    public Cliente createCliente(@Valid @RequestBody Cliente cliente) {
         return clienteService.createCliente(cliente);
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<Cliente> updateCliente(@PathVariable Long id, @RequestBody Cliente cliente) {
+    public ResponseEntity<Cliente> updateCliente(@PathVariable Long id, @Valid @RequestBody Cliente cliente) {
         return clienteService.updateCliente(id, cliente)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
